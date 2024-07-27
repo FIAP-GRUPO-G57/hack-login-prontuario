@@ -37,8 +37,8 @@ jobs:
       - name: Check if Lambda function exists
         id: check_lambda
         run: |
-          function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-west-2 --query 'Configuration.FunctionName' --output text)
-          if [ "$function_exists" == "cognito_lambda" ]; then
+          function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-east-1 --query 'Configuration.FunctionName' --output text)
+          if [ "$function_exists" == *"ResourceNotFoundException"* ]; then
             echo "::set-output name=exists::true"
           else
             echo "::set-output name=exists::false"
