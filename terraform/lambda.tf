@@ -40,7 +40,7 @@ EOF
 resource "aws_lambda_function" "cognito_lambda" {
   filename      = "lambda_function_payload.zip"
   function_name = "cognito_lambda"
-  role          = length(data.aws_iam_role.existing_lambda_role.name) == 0 ? aws_iam_role.lambda_role.arn : data.aws_iam_role.existing_lambda_role.arn
+  role          = length(data.aws_iam_role.existing_lambda_role.name) == 0 ? aws_iam_role.lambda_role[0].arn : data.aws_iam_role.existing_lambda_role.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.8"
 
