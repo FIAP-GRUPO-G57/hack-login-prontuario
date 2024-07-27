@@ -53,18 +53,22 @@ jobs:
       - name: Terraform Init
         if: steps.check_lambda.outputs.exists == 'false'
         run: terraform init
+        working-directory: ./terraform
   
       - name: Terraform Validate
         if: steps.check_lambda.outputs.exists == 'false'
         run: terraform validate
+        working-directory: ./terraform
   
       - name: Terraform Plan
         if: steps.check_lambda.outputs.exists == 'false'
         run: terraform plan
+        working-directory: ./terraform
   
       - name: Terraform Apply
         if: steps.check_lambda.outputs.exists == 'false'
         run: terraform apply -auto-approve
+        working-directory: ./terraform
         env:
             TF_VAR_user_pool_id: ${{ secrets.USER_POOL_ID }}
             TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
