@@ -43,6 +43,7 @@ jobs:
           if [ "$function_exists" == "Function does not exist" ]; then
             echo "Function not found: cognito_lambda"
             echo "::set-output name=exists::false"
+            echo "Heello Moto!"
           fi
   
       - name: Terraform Init
