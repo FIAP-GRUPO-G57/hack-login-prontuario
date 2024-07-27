@@ -39,11 +39,12 @@ jobs:
       - name: Check if Lambda Function Exists
         id: check_lambda
         run: |
-          function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-east-1 --query 'Configuration.FunctionName' --output text) || echo "Function does not exist"
-          if [[ "$function_exists" == "Function does not exist" ]]; then
+          function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-east-1 --query 'Configuration.FunctionName' --output text) || echo false
+          if [[ "$function_exists" == "false"] ]; then
             echo "Function not found: cognito_lambda"
             echo "::set-output name=exists::false"
-            echo "Heello Moto!"
+          else
+            echo "::set-output name=exists::true"
           fi
   
       - name: Terraform Init
