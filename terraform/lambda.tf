@@ -30,17 +30,4 @@ resource "aws_lambda_function" "cognito_lambda" {
 
     environment {
         variables = {
-        USER_POOL_ID = "${var.user_pool_id}",
-        CLIENT_ID = "${var.client_id}"
-        }
-    }
-}
-
-resource "aws_lambda_permission" "apigw_lambda" {
-  statement_id  = "AllowAPIGatewayInvoke"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.cognito_lambda.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:us-east-1:123456789012:api-id/stage/GET/resource"
-}
-
+        USER_POOL_ID = "${var.u
