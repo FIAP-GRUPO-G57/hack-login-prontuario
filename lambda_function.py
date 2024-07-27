@@ -24,7 +24,7 @@ def lambda_handler(event, context):
     
     username = event['username']
     password = event['password']
-    new_password = event.get['new_password']
+    new_password = event.get('new_password')
     email = event.get('email')
     secret_hash = get_secret_hash(username, client_id, client_secret)
     
@@ -40,7 +40,7 @@ def lambda_handler(event, context):
         )
         logger.info("Resposta da autenticação: %s", response)
 
-        if response.get['ChallengeName'] == 'NEW_PASSWORD_REQUIRED':
+        if response.get('ChallengeName') == 'NEW_PASSWORD_REQUIRED':
 
             if not new_password:
                 return {
