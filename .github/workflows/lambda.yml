@@ -39,9 +39,9 @@ jobs:
         run: |
           function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-east-1 --query 'Configuration.FunctionName' --output text)
           if [ "$function_exists" == *"ResourceNotFoundException"* ]; then
-            echo "::set-output name=exists::true"
-          else
             echo "::set-output name=exists::false"
+          else
+            echo "::set-output name=exists::true"
           fi
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
