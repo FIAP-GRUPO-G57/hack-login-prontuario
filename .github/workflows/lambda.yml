@@ -34,18 +34,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - name: Check if Lambda function exists
+
+
+      - name: Check if Lambda Function Exists
         id: check_lambda
         run: |
-          function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-east-1 --query 'Configuration.FunctionName' --output text)
-          if [ "$function_exists" == *"ResourceNotFoundException"* ]; then
+          function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-east-1 --query 'Configuration.FunctionName' --output text) || echo "Function does not exist"
+          if [ "$function_exists" == "Function does not exist" ]; then
+            echo "Function not found: cognito_lambda"
             echo "::set-output name=exists::false"
-          else
-            echo "::set-output name=exists::true"
           fi
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   
       - name: Terraform Init
         if: steps.check_lambda.outputs.exists == 'false'
