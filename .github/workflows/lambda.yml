@@ -37,15 +37,15 @@ jobs:
       - name: Check if Lambda function exists
         id: check_lambda
         run: |
-            function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-west-2 --query 'Configuration.FunctionName' --output text)
-            if [ "$function_exists" == "cognito_lambda" ]; then
-              echo "::set-output name=exists::true"
-            else
-              echo "::set-output name=exists::false"
-            fi
-          env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-west-2 --query 'Configuration.FunctionName' --output text)
+          if [ "$function_exists" == "cognito_lambda" ]; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   
       - name: Terraform Init
         if: steps.check_lambda.outputs.exists == 'false'
