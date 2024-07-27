@@ -26,6 +26,7 @@ def lambda_handler(event, context):
     password = event['password']
     new_password = event.get('new_password')
     email = event.get('email')
+   
     secret_hash = get_secret_hash(username, client_id, client_secret)
     
     try:
@@ -49,6 +50,7 @@ def lambda_handler(event, context):
                 }
 
 
+            logger.info("EMAIL: %s", email)
             response = client.respond_to_auth_challenge(
                 ChallengeName='NEW_PASSWORD_REQUIRED',
                 ClientId=client_id,
