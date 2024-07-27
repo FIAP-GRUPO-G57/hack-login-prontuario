@@ -24,6 +24,7 @@ def lambda_handler(event, context):
     
     username = event['username']
     password = event['password']
+    new_password = event['new_password']
     secret_hash = get_secret_hash(username, client_id, client_secret)
     
     try:
@@ -37,6 +38,27 @@ def lambda_handler(event, context):
             ClientId=client_id
         )
         logger.info("Resposta da autenticação: %s", response)
+
+        if response['ChallengeName'] == 'NEW_PASSWORD_REQUIRED':
+
+            if not new_password:
+                return {
+                    'statusCode': 400,
+                    'body': json.dumps({'message': 'New password is required'})
+                }
+
+
+            response = client.respond_to_auth_challenge(
+                ChallengeName='NEW_PASSWORD_REQUIRED',
+                ClientId=client_id,
+                ChallengeResponses={
+                    'USERNAME': username,
+                    'NEW_PASSWORD': new_password,
+                    'SECRET_HASH': secret_hash
+                },
+                Session=response['Session']
+            )
+            logger.info("Resposta da autenticação: %s", response)
 
         return {
             'statusCode': 200,
@@ -58,6 +80,7 @@ def lambda_handler(event, context):
             'body': json.dumps({'message': 'User is not confirmed'})
         }
     except Exception as e:
+        logger.error("Exception: %s", e)
         return {
             'statusCode': 500,
             'body': json.dumps({'message': 'Internal server error', 'error': str(e)})
