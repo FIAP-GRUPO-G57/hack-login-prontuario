@@ -1,0 +1,43 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Zip the Lambda function code
+        run: |
+          zip -r lambda_function_payload.zip .
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Check if Lambda function exists
+        id: check_lambda
+        run: |
+            function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-west-2 --query 'Configuration.FunctionName' --output text)
+            if [ "$function_exists" == "cognito_lambda" ]; then
+              echo "::
