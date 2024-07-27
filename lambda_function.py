@@ -33,13 +33,13 @@ def lambda_handler(event, context):
                 'token': response['AuthenticationResult']['IdToken']
             })
         }
-    except client.exceptions.NotAuthorizedException:
+    except client.exceptions.NotAuthorizedException as e:
         logger.error("NotAuthorizedException: %s", e)
         return {
             'statusCode': 401,
             'body': json.dumps({'message': 'The username or password is incorrect'})
         }
-    except client.exceptions.UserNotConfirmedException:
+    except client.exceptions.UserNotConfirmedException as e:
         logger.error("UserNotConfirmedException: %s", e)
         return {
             'statusCode': 401,
