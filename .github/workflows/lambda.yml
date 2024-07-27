@@ -28,6 +28,10 @@ jobs:
         run: |
           zip -r lambda_function_payload.zip .
 
+      - name: Move ZIP to Terraform directory
+        run: |
+          mv lambda_function_payload.zip ./terraform/
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
