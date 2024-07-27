@@ -19,7 +19,8 @@ def lambda_handler(event, context):
             },
             ClientId=client_id
         )
-        
+        logger.info("Resposta da autenticação: %s", response)
+
         return {
             'statusCode': 200,
             'body': json.dumps({
@@ -28,11 +29,13 @@ def lambda_handler(event, context):
             })
         }
     except client.exceptions.NotAuthorizedException:
+        logger.error("NotAuthorizedException: %s", e)
         return {
             'statusCode': 401,
             'body': json.dumps({'message': 'The username or password is incorrect'})
         }
     except client.exceptions.UserNotConfirmedException:
+        logger.error("UserNotConfirmedException: %s", e)
         return {
             'statusCode': 401,
             'body': json.dumps({'message': 'User is not confirmed'})
