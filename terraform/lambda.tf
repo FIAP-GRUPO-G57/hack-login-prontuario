@@ -12,6 +12,11 @@ variable "client_id" {
   type        = string
 }
 
+variable "client_secret" {
+  description = "The secret of the Cognito User Pool "
+  type        = string
+}
+
 data "aws_iam_role" "existing_lambda_role" {
   name = "lambda_role"
 }
@@ -48,6 +53,7 @@ resource "aws_lambda_function" "cognito_lambda" {
     variables = {
       USER_POOL_ID = "${var.user_pool_id}"
       CLIENT_ID    = "${var.client_id}"
+      CLIENT_SECRET = "${var.client_secret}" 
     }
   }
 

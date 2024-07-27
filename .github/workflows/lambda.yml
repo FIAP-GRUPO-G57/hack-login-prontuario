@@ -55,36 +55,39 @@ jobs:
           fi
   
       - name: Terraform Init
-        if: steps.check_lambda.outputs.exists == 'false'
+        if: steps.check_lambda.outputs.exists == 'true'
         run: terraform init
         working-directory: ./terraform
   
       - name: Terraform Validate
-        if: steps.check_lambda.outputs.exists == 'false'
+        if: steps.check_lambda.outputs.exists == 'true'
         run: terraform validate
         working-directory: ./terraform
         env:
           TF_VAR_user_pool_id: ${{ secrets.USER_POOL_ID }}
           TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
+          TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
   
       - name: Terraform Plan
-        if: steps.check_lambda.outputs.exists == 'false'
+        if: steps.check_lambda.outputs.exists == 'true'
         run: terraform plan
         working-directory: ./terraform
         env:
           TF_VAR_user_pool_id: ${{ secrets.USER_POOL_ID }}
           TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
+          TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
   
       - name: Terraform Apply
-        if: steps.check_lambda.outputs.exists == 'false'
+        if: steps.check_lambda.outputs.exists == 'true'
         run: terraform apply -auto-approve
         working-directory: ./terraform
         env:
             TF_VAR_user_pool_id: ${{ secrets.USER_POOL_ID }}
             TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
+            TF_VAR_client_secret: ${{ secrets.CLIENT_SECRET }}
 
       - name: Update Lambda Function
-        if: steps.check_lambda.outputs.exists == 'true'
+        if: steps.check_lambda.outputs.exists == 'false'
         run: |
           aws lambda update-function-code \
             --function-name cognito_lambda \
