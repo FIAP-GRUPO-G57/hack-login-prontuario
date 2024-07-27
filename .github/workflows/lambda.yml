@@ -39,14 +39,14 @@ jobs:
       - name: Check if Lambda Function Exists
         id: check_lambda
         run: |
-          function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-east-1 --query 'Configuration.FunctionName' --output text) || echo false
+          function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-east-1 --query 'Configuration.FunctionName' --output text) || function_exists="false"
           echo "Function exists: $function_exists"
           if [[ "$function_exists" == "false" ]]; then
             echo "Function not found: cognito_lambda"
-            echo "::set-output name=exists::false"
+            echo "exists=false" >> $GITHUB_OUTPUT
         
           else
-            echo "::set-output name=exists::true"
+            echo "exists=true" >> $GITHUB_OUTPUT
             echo "Function found: cognito_lambda"
           fi
   
