@@ -2,6 +2,16 @@ provider "aws" {
   region = "us-east-1"
 }
 
+variable "user_pool_id" {
+  description = "The ID of the Cognito User Pool"
+  type        = string
+}
+
+variable "client_id" {
+  description = "The ID of the Cognito User Pool Client"
+  type        = string
+}
+
 resource "aws_iam_role" "lambda_role" {
   name = "lambda_role"
   assume_role_policy = <<EOF
