@@ -40,4 +40,29 @@ jobs:
         run: |
             function_exists=$(aws lambda get-function --function-name cognito_lambda --region us-west-2 --query 'Configuration.FunctionName' --output text)
             if [ "$function_exists" == "cognito_lambda" ]; then
-              echo "::
+              echo "::set-output name=exists::true"
+            else
+              echo "::set-output name=exists::false"
+            fi
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  
+      - name: Terraform Init
+        if: steps.check_lambda.outputs.exists == 'false'
+        run: terraform init
+  
+      - name: Terraform Validate
+        if: steps.check_lambda.outputs.exists == 'false'
+        run: terraform validate
+  
+      - name: Terraform Plan
+        if: steps.check_lambda.outputs.exists == 'false'
+        run: terraform plan
+  
+      - name: Terraform Apply
+        if: steps.check_lambda.outputs.exists == 'false'
+        run: terraform apply -auto-approve
+        env:
+            TF_VAR_user_pool_id: ${{ secrets.USER_POOL_ID }}
+            TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
