@@ -56,7 +56,7 @@ def lambda_handler(event, context):
                     'USERNAME': username,
                     'NEW_PASSWORD': new_password,
                     'SECRET_HASH': secret_hash,
-                    'EMAIL': email
+                    'email': email
                 },
                 Session=response['Session']
             )
