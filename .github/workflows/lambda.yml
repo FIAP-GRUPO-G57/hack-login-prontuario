@@ -88,4 +88,4 @@ jobs:
         run: |
           aws lambda update-function-code \
             --function-name cognito_lambda \
-            --zip-file fileb://.terraform/lambda_function_payload.zip
+            --zip-file fileb://terraform/lambda_function_payload.zip
