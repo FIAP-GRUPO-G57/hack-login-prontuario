@@ -59,11 +59,17 @@ jobs:
         if: steps.check_lambda.outputs.exists == 'false'
         run: terraform validate
         working-directory: ./terraform
+        env:
+          TF_VAR_user_pool_id: ${{ secrets.USER_POOL_ID }}
+          TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
   
       - name: Terraform Plan
         if: steps.check_lambda.outputs.exists == 'false'
         run: terraform plan
         working-directory: ./terraform
+        env:
+          TF_VAR_user_pool_id: ${{ secrets.USER_POOL_ID }}
+          TF_VAR_client_id: ${{ secrets.CLIENT_ID }}
   
       - name: Terraform Apply
         if: steps.check_lambda.outputs.exists == 'false'
