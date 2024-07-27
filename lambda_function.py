@@ -46,7 +46,7 @@ def lambda_handler(event, context):
             if not new_password:
                 return {
                     'statusCode': 400,
-                    'body': json.dumps({'message': 'New password is required'})
+                    'body': json.dumps({'message': 'New password is required '})
                 }
 
 
