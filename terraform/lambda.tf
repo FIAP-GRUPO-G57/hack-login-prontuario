@@ -12,8 +12,19 @@ variable "client_id" {
   type        = string
 }
 
+variable "lambda_role_name" {
+  description = "The name of the IAM role for the Lambda function"
+  type        = string
+  default     = "lambda_role_${random_string.suffix.result}"
+}
+
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
+}
+
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda_role"
+  name = var.lambda_role_name
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
