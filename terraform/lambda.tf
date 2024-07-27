@@ -12,19 +12,14 @@ variable "client_id" {
   type        = string
 }
 
-variable "lambda_role_name" {
-  description = "The name of the IAM role for the Lambda function"
-  type        = string
-  default     = "lambda_role_${random_string.suffix.result}"
-}
-
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
+data "aws_iam_role" "existing_lambda_role" {
+  name = "lambda_role"
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name = var.lambda_role_name
+  count = length(data.aws_iam_role.existing_lambda_role.name) == 0 ? 1 : 0
+
+  name = "lambda_role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -45,7 +40,7 @@ EOF
 resource "aws_lambda_function" "cognito_lambda" {
   filename      = "lambda_function_payload.zip"
   function_name = "cognito_lambda"
-  role          = aws_iam_role.lambda_role.arn
+  role          = length(data.aws_iam_role.existing_lambda_role.name) == 0 ? aws_iam_role.lambda_role.arn : data.aws_iam_role.existing_lambda_role.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.8"
 
